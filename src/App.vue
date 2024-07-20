@@ -1,9 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import Header from './components/Header.vue'
 import Cursor from './components/Cursor.vue'
-
-const bg = ref<HTMLElement | null>(null)
 </script>
 
 <script lang="ts">
@@ -14,7 +11,8 @@ export default {
       cursorX: 0,
       cursorY: 0,
       cursorHeight: 32,
-      cursorWidth: 32
+      cursorWidth: 32,
+      bgoffset: '0 0'
     }
   },
   methods: {
@@ -46,13 +44,14 @@ export default {
     },
 
     updateMousePosition(event: any) {
-      if (bg.value) {
-        var rect: DOMRect = bg.value.getBoundingClientRect()
-        bg.value.style.backgroundPosition =
-          (event.clientX / rect.right) * 50 + 'px ' + (event.clientY / rect.bottom) * 50 + 'px'
-      }
+      this.bgoffset =
+        (event.clientX / window.innerWidth) * 50 +
+        'px ' +
+        (event.clientY / window.innerHeight) * 50 +
+        'px'
+
       if (this.cursorClass == 'hover') {
-        rect = event.target.getBoundingClientRect()
+        var rect: DOMRect = event.target.getBoundingClientRect()
         var translateX = ((event.clientX - rect.left) / this.cursorWidth - 0.5) * 20
         var translateY = ((event.clientY - rect.top) / this.cursorHeight - 0.5) * 20
         event.target.firstChild.style.transform =
@@ -81,7 +80,7 @@ export default {
       @btnrelease="btnRelease"
       @mouseleave="onLeave"
     ></Header>
-    <div id="bg" ref="bg"></div>
+    <div id="bg" :style="{ 'background-position': bgoffset }"></div>
   </div>
 </template>
 
