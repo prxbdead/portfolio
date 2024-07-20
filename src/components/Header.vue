@@ -22,6 +22,9 @@ export default {
       }
 
       this.age = age
+    },
+    redirGithub() {
+      window.location.href = 'https://github.com/prxbdead'
     }
   },
   created() {
@@ -51,7 +54,7 @@ export default {
         </p>
       </div>
       <div class="bottom">
-        <button @mouseover="btnHover" @mouseleave="btnRelease">
+        <button @mouseover="btnHover" @mouseleave="btnRelease" @click="redirGithub">
           <div>
             <img alt="github-svg" src="@/assets/icons/github.svg" />
             github
