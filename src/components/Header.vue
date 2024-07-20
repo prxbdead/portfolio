@@ -53,7 +53,7 @@ export default {
       <div class="bottom">
         <button @mouseover="btnHover" @mouseleave="btnRelease">
           <div>
-            <img src="@/assets/icons/github.svg" />
+            <img alt="github-svg" src="@/assets/icons/github.svg" />
             github
           </div>
         </button>
