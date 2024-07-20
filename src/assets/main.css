@@ -1,4 +1,22 @@
-@import './base.css';
+@font-face {
+  font-family: 'w95fa';
+  src: url('./fonts/w95fa.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+body {
+  background-color: teal;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  font-weight: normal;
+}
 
 #app {
   max-width: 1280px;
@@ -7,29 +25,100 @@
   font-weight: normal;
 }
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
+.container {
+  display: flex;
 }
 
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
+footer {
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: 28px;
+  position: absolute;
+  display: block;
+
+  background-color: silver;
+
+  .container {
+    bottom: 0;
+    width: 100vw;
+    height: 26px;
+    position: absolute;
+
+    padding: 2px;
+
+    outline: white solid 1px;
+
+    div {
+      height: 22px;
+    }
+
+    #left {
+      width: 54px;
+    }
+
+    #center {
+      display: flex;
+      width: calc(100vw - 169px);
+      padding: 0 4px;
+    }
+
+    #right {
+      width: 115px;
+    }
   }
 }
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
+* {
+  font-family: 'w95fa';
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-drag: none;
+}
 
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
+.btn {
+  display: flex;
+  border: 1px solid white;
+  border-color: white black black white;
+  background-color: silver;
+
+  align-items: center;
+  justify-content: center;
+
+  span {
+    margin: 1px;
+  }
+}
+
+.btn:active,
+.btn.active {
+  border-color: black white white black;
+}
+
+#startMenu {
+  display: none;
+}
+
+.btn-startmenu {
+  height: 22px;
+  width: 54px;
+  text-shadow: -0.5px -0.5px 0px black;
+}
+
+.btn-time {
+  border-color: gray white white gray;
+  pointer-events: none;
+}
+
+.btn-open {
+  margin: 0 2px;
+  padding: 0 2px;
+  justify-content: left;
+  span {
+    padding-left: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
