@@ -1,5 +1,6 @@
 @font-face {
   font-family: 'Josefin Sans';
+  font-display: swap;
   src: url('../fonts/JosefinSans.woff2') format('woff2');
 }
 
