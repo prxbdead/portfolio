@@ -1,81 +1,103 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref } from 'vue'
+import Header from './components/Header.vue'
+import Cursor from './components/Cursor.vue'
 
-import HelloWorld from './components/HelloWorld.vue'
+const bg = ref<HTMLElement | null>(null)
+</script>
 
-const startMenu = ref('')
-const currentTime = ref(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }))
-const apps = ref([
-  { name: 'teeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeest' },
-  { name: 'asdfaaaaaaaaaafasfadafsafasfa' },
-  { name: '3' },
-  { name: '4' },
-  { name: '5' },
-  { name: '6' }
-])
+<script lang="ts">
+export default {
+  data() {
+    return {
+      cursorClass: '',
+      cursorX: 0,
+      cursorY: 0,
+      cursorHeight: 32,
+      cursorWidth: 32
+    }
+  },
+  methods: {
+    txtHover(event: any) {
+      this.cursorClass = 'hover-text'
+      this.cursorHeight = parseInt(window.getComputedStyle(event.target).fontSize, 10) * 1.5
+    },
 
-const activeApp = ref(apps.value[0])
+    btnHover(event: any) {
+      this.cursorClass = 'hover'
 
-const updateCurrentTime = () => {
-  currentTime.value = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      var rect = event.target.getBoundingClientRect()
+      this.cursorHeight = rect.bottom - rect.top
+      this.cursorWidth = rect.right - rect.left
+      this.cursorX = (rect.left + rect.right) / 2
+      this.cursorY = (rect.top + rect.bottom) / 2
+      event.target.classList.add('hover')
+    },
+
+    btnRelease(event: any) {
+      event.target.firstChild.style.transform = ''
+      event.target.classList.remove('hover')
+    },
+
+    onLeave() {
+      this.cursorClass = ''
+      this.cursorHeight = 32
+      this.cursorWidth = 32
+    },
+
+    updateMousePosition(event: any) {
+      if (bg.value) {
+        var rect: DOMRect = bg.value.getBoundingClientRect()
+        bg.value.style.backgroundPosition =
+          (event.clientX / rect.right) * 50 + 'px ' + (event.clientY / rect.bottom) * 50 + 'px'
+      }
+      if (this.cursorClass == 'hover') {
+        rect = event.target.getBoundingClientRect()
+        var translateX = ((event.clientX - rect.left) / this.cursorWidth - 0.5) * 20
+        var translateY = ((event.clientY - rect.top) / this.cursorHeight - 0.5) * 20
+        event.target.firstChild.style.transform =
+          'translate(' + translateX + '%, ' + translateY + '%)'
+      } else {
+        this.cursorX = event.clientX
+        this.cursorY = event.clientY
+      }
+    }
+  }
 }
-
-let intervalId: number | undefined
-
-onMounted(() => {
-  intervalId = setInterval(updateCurrentTime, 1000)
-})
-
-onUnmounted(() => {
-  clearInterval(intervalId)
-})
 </script>
 
 <template>
-  <!--
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />-->
-  <footer>
-    <div class="container">
-      <div id="left">
-        <input type="checkbox" id="startMenu" v-model="startMenu" />
-        <label class="btn btn-startmenu" :class="{ active: startMenu }" for="startMenu">
-          <span><img src="./assets/icons/startmenu.png" draggable="false" /></span>
-          <span>Start</span>
-        </label>
-      </div>
-      <div id="center">
-        <div
-          class="btn btn-open"
-          :class="{ active: app == activeApp && !startMenu }"
-          :style="{ width: 'calc((100vw - 174px) / ' + apps.length + ')', 'max-width': '10vw' }"
-          v-for="app in apps"
-          @click="(activeApp = app), (startMenu = '')"
-        >
-          <img src="./assets/icons/startmenu.png" draggable="false" />
-          <span>
-            {{ app.name }}
-          </span>
-        </div>
-      </div>
-      <div id="right">
-        <div class="btn btn-time">
-          <span> {{ currentTime }} </span>
-        </div>
-      </div>
-    </div>
-  </footer>
+  <div id="app" @mousemove="updateMousePosition">
+    <Cursor
+      :x="cursorX"
+      :y="cursorY"
+      :cursorClass="cursorClass"
+      :cursorHeight="cursorHeight"
+      :cursorWidth="cursorWidth"
+    ></Cursor>
+    <Header
+      @txthover="txtHover"
+      @btnhover="btnHover"
+      @btnrelease="btnRelease"
+      @mouseleave="onLeave"
+    ></Header>
+    <div id="bg" ref="bg"></div>
+  </div>
 </template>
+
+<style scoped>
+#app {
+  pointer-events: all;
+}
+
+#bg {
+  position: absolute;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -999;
+  background: url(./assets/icons/tile.png) repeat 0 0;
+  transition: background-position 0.1s ease-out;
+  opacity: 0.3;
+}
+</style>
