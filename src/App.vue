@@ -28,8 +28,8 @@ export default {
       var rect = event.target.getBoundingClientRect()
       this.cursorHeight = rect.bottom - rect.top
       this.cursorWidth = rect.right - rect.left
-      this.cursorX = (rect.left + rect.right) / 2
-      this.cursorY = (rect.top + rect.bottom) / 2
+      this.cursorX = (rect.left + rect.right) / 2 + window.scrollX
+      this.cursorY = (rect.top + rect.bottom) / 2 + window.scrollY
       event.target.classList.add('hover')
     },
 
