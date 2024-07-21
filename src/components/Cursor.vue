@@ -69,7 +69,7 @@ export default {
   #cursor {
     display: none;
 
-    &.hover-text {
+    &.hover {
       display: block;
     }
   }
