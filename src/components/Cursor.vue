@@ -41,26 +41,33 @@ export default {
 
 <style scoped>
 #cursor {
-  transform: translate(-50%, -50%);
-  position: absolute;
-  border-radius: 50%;
-  pointer-events: none;
-  transition: all 0.1s ease-out;
-  background: #2e2933;
-  opacity: 0.8;
-  z-index: 999;
+  display: none;
 }
 
-#cursor.hover {
-  border-radius: 3em;
-  z-index: 0;
-  transition: all 0.1s ease-out;
-}
+@media (pointer: fine) {
+  #cursor {
+    display: block;
+    transform: translate(-50%, -50%);
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    transition: all 0.1s ease-out;
+    background: #2e2933;
+    opacity: 0.8;
+    z-index: 999;
+  }
 
-#cursor.hover-text {
-  border-radius: 32px;
-  width: 4px !important;
-  background: #7f00ff;
-  left: 0;
+  #cursor.hover {
+    border-radius: 3em;
+    z-index: 0;
+    transition: all 0.1s ease-out;
+  }
+
+  #cursor.hover-text {
+    border-radius: 32px;
+    width: 4px !important;
+    background: #7f00ff;
+    left: 0;
+  }
 }
 </style>
