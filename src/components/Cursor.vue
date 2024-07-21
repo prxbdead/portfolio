@@ -40,16 +40,6 @@ export default {
 </template>
 
 <style scoped>
-@media not (pointer: fine) {
-  #cursor {
-    display: none;
-
-    &.hover-text {
-      display: block;
-    }
-  }
-}
-
 #cursor {
   display: block;
   transform: translate(-50%, -50%);
@@ -73,5 +63,15 @@ export default {
   width: 4px !important;
   background: #7f00ff;
   left: 0;
+}
+
+@media not (pointer: fine) {
+  #cursor {
+    display: none;
+
+    &.hover-text {
+      display: block;
+    }
+  }
 }
 </style>
