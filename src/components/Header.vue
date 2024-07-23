@@ -54,7 +54,7 @@ export default {
         </p>
       </div>
       <div class="bottom">
-        <button @mouseover="btnHover" @mouseleave="btnRelease" @click="redirGithub">
+        <button tabindex="1" @mouseover="btnHover" @mouseleave="btnRelease" @click="redirGithub">
           <div>
             <img alt="github-svg" src="@/assets/icons/github.svg" />
             github
@@ -95,6 +95,7 @@ export default {
       h1 {
         font-size: min(10vh, 20vw);
         font-weight: bolder;
+        transform: translate(-0.08em, 0);
       }
 
       h3 {

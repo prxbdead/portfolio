@@ -36,6 +36,7 @@ button {
   border-radius: 3em;
   padding: min(1vh, 2vw) min(3vh, 6vw);
   background-color: transparent;
+  outline: none;
 
   div {
     transition: all 0.1s ease-out;
@@ -51,8 +52,11 @@ button {
       margin-right: min(2vh, 4vw);
     }
   }
-}
 
-button.hover {
-  border: 1.5px solid #fff0;
+  &.hover,
+  &:focus,
+  &:active {
+    border: 1.5px solid #0000;
+    background-color: #2e2933cc;
+  }
 }
