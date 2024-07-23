@@ -17,6 +17,7 @@ body {
   cursor: none;
   font-weight: normal;
   pointer-events: none;
+  overflow: hidden;
 }
 
 a,
