@@ -1,34 +1,24 @@
 <script lang="ts">
 export default {
   props: {
-    cursorHeight: {
-      type: Number,
-      default: 32
-    },
-    cursorWidth: {
-      type: Number,
-      default: 32
-    },
-    cursorClass: {
-      type: String,
-      default: ''
-    },
-    x: {
-      type: Number,
-      required: true
-    },
-    y: {
-      type: Number,
-      required: true
+    cursor: {
+      type: Object,
+      default: () => ({
+        class: '',
+        x: 0,
+        y: 0,
+        h: 32,
+        w: 32
+      })
     }
   },
   computed: {
     cursorStyle() {
       return {
-        top: `${this.y}px`,
-        left: `${this.x}px`,
-        height: `${this.cursorHeight}px`,
-        width: `${this.cursorWidth}px`
+        top: `${this.cursor.y}px`,
+        left: `${this.cursor.x}px`,
+        height: `${this.cursor.h}px`,
+        width: `${this.cursor.w}px`
       }
     }
   }
@@ -36,7 +26,7 @@ export default {
 </script>
 
 <template>
-  <div id="cursor" :class="[cursorClass]" :style="cursorStyle"></div>
+  <div id="cursor" :class="[cursor.class]" :style="cursorStyle"></div>
 </template>
 
 <style scoped>

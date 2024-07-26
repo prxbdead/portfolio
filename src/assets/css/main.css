@@ -4,9 +4,15 @@
   src: url('../fonts/JosefinSans.woff2') format('woff2');
 }
 
+:root {
+  --bgoffsetx: 0;
+  --bgoffsety: 0;
+}
+
 body {
   background-color: #000;
   color: #fff;
+  overflow: hidden;
 }
 
 * {
@@ -17,7 +23,6 @@ body {
   cursor: none;
   font-weight: normal;
   pointer-events: none;
-  overflow: hidden;
 }
 
 a,
@@ -37,9 +42,9 @@ button {
   padding: min(1vh, 2vw) min(3vh, 6vw);
   background-color: transparent;
   outline: none;
+  transition: background-color 0.1s ease-out;
 
   div {
-    transition: all 0.1s ease-out;
     display: flex;
     justify-content: center;
     align-items: center;

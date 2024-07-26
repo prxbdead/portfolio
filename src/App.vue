@@ -1,62 +1,78 @@
 <script setup lang="ts">
-import Header from './components/Header.vue'
-import Cursor from './components/Cursor.vue'
+import Header from './components/HeaderComponent.vue'
+import Cursor from './components/CursorComponent.vue'
 </script>
 
 <script lang="ts">
 export default {
   data() {
     return {
-      cursorClass: '',
-      cursorX: 0,
-      cursorY: 0,
-      cursorHeight: 32,
-      cursorWidth: 32,
-      bgoffsetx: 0,
-      bgoffsety: 0
+      cursor: {
+        class: '',
+        x: 0,
+        y: 0,
+        h: 32,
+        w: 32
+      },
+      page: 0
     }
   },
   methods: {
-    txtHover(event: any) {
-      this.cursorClass = 'hover-text'
-      this.cursorHeight = parseInt(window.getComputedStyle(event.target).fontSize, 10) * 1.5
-    },
-
-    btnHover(event: any) {
-      this.cursorClass = 'hover'
-
-      var rect = event.target.getBoundingClientRect()
-      this.cursorHeight = rect.bottom - rect.top
-      this.cursorWidth = rect.right - rect.left
-      this.cursorX = (rect.left + rect.right) / 2 + window.scrollX
-      this.cursorY = (rect.top + rect.bottom) / 2 + window.scrollY
-      event.target.classList.add('hover')
-    },
-
-    btnRelease(event: any) {
-      event.target.firstChild.style.transform = ''
-      event.target.classList.remove('hover')
-    },
-
-    onLeave() {
-      this.cursorClass = ''
-      this.cursorHeight = 32
-      this.cursorWidth = 32
-    },
-
-    updateMousePosition(event: any) {
-      this.bgoffsetx = (event.clientX / window.innerWidth) * 50
-      this.bgoffsety = (event.clientY / window.innerHeight) * 50
-
-      if (this.cursorClass == 'hover') {
-        var rect: DOMRect = event.target.getBoundingClientRect()
-        var translateX = ((event.clientX - rect.left) / this.cursorWidth - 0.5) * 20
-        var translateY = ((event.clientY - rect.top) / this.cursorHeight - 0.5) * 20
-        event.target.firstChild.style.transform =
-          'translate(' + translateX + '%, ' + translateY + '%)'
+    updateCursor(event: Event) {
+      const target = event.target as HTMLElement
+      if (!target.childElementCount) {
+        if (event.type === 'mouseover') {
+          this.cursor.class = 'hover-text'
+          this.cursor.h = parseInt(window.getComputedStyle(target).fontSize, 10) * 1.5
+        } else {
+          this.cursor.class = ''
+          this.cursor.h = 32
+          this.cursor.w = 32
+        }
       } else {
-        this.cursorX = event.clientX
-        this.cursorY = event.clientY
+        if (event.type === 'mouseover') {
+          this.cursor.class = 'hover'
+          var rect = target.getBoundingClientRect()
+          this.cursor.h = rect.bottom - rect.top
+          this.cursor.w = rect.right - rect.left
+          this.cursor.x = (rect.left + rect.right) / 2 + window.scrollX
+          this.cursor.y = (rect.top + rect.bottom) / 2 + window.scrollY
+          target.classList.add('hover')
+        } else {
+          this.cursor.class = ''
+          this.cursor.h = 32
+          this.cursor.w = 32
+          target.classList.remove('hover')
+        }
+      }
+    },
+    updateMousePosition(event: any) {
+      const h = document.querySelector(':root') as HTMLElement
+
+      h.style.setProperty('--bgoffsetx', (event.clientX / window.innerWidth) * 50 + 'px')
+      h.style.setProperty('--bgoffsety', (event.clientY / window.innerHeight) * 50 + 'px')
+
+      if (this.cursor.class == 'hover') {
+        const rect: DOMRect = event.target.getBoundingClientRect()
+        event.target.firstChild.style.transform = 'translate(' + ((event.clientX - rect.left) / this.cursor.w - 0.5) * 20 + '%, ' + ((event.clientY - rect.top) / this.cursor.h - 0.5) * 20 + '%)'
+      } else {
+        this.cursor.x = event.clientX
+        this.cursor.y = event.clientY
+      }
+    },
+    onScroll(event: any) {
+      event.preventDefault()
+      let el: HTMLElement
+      switch (this.page) {
+        case 0:
+          el = this.$refs.test as HTMLElement
+          el.style.top = '0'
+          this.page = 1
+          break
+        case 1:
+          el = this.$refs.test as HTMLElement
+          el.style.top = '0'
+          this.page = 0
       }
     }
   }
@@ -64,89 +80,16 @@ export default {
 </script>
 
 <template>
-  <div id="app" @mousemove="updateMousePosition">
-    <Cursor
-      :x="cursorX"
-      :y="cursorY"
-      :cursorClass="cursorClass"
-      :cursorHeight="cursorHeight"
-      :cursorWidth="cursorWidth"
-    ></Cursor>
-    <Header
-      @txthover="txtHover"
-      @btnhover="btnHover"
-      @btnrelease="btnRelease"
-      @mouseleave="onLeave"
-    ></Header>
+  <div id="container" @mousemove="updateMousePosition" @wheel="onScroll" @touchmove="onScroll" @scroll.prevent>
+    <Cursor :cursor="cursor"></Cursor>
+    <Header v-if="page == 0" @updateCursor="updateCursor"></Header>
   </div>
-  <div
-    id="bg"
-    :style="{
-      '--offsetx': bgoffsetx + 'px',
-      '--offsety': bgoffsety + 'px'
-    }"
-  ></div>
 </template>
 
 <style scoped>
-#app {
+#container {
+  max-height: 100vh;
   pointer-events: all;
-}
-
-#bg {
-  position: absolute;
-  width: 100vw;
-  height: 100vh;
-  top: 0;
-  left: 0;
-  overflow: hidden;
-}
-
-#bg::after {
-  content: '';
-  position: absolute;
-  overflow: hidden;
-  width: calc(200vw + 200vh);
-  height: calc(200vw + 200vh);
-  top: calc(-100vw - 100vh);
-  left: calc(-100vw - 100vh);
-  z-index: -999;
-  left: 0;
-
-  background: url(./assets/icons/tile.webp) repeat 0 0;
-  transition: all 0.1s ease-out;
-  animation: blink 5s ease-in-out infinite;
-
-  transform-origin: 0 0;
-  transform: translate(var(--offsetx), var(--offsety)) rotate(45deg);
-}
-
-@keyframes blink {
-  0% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.6;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-@media not (pointer: fine) {
-  @keyframes slide {
-    0% {
-      transform: translate(0, 0) rotate(45deg);
-    }
-    100% {
-      transform: translate(calc(sqrt(2) * 50px), calc(sqrt(2) * 50px)) rotate(45deg);
-    }
-  }
-
-  #bg::after {
-    animation:
-      blink 5s ease-in-out infinite,
-      slide 1s linear infinite;
-  }
+  overflow-y: scroll;
 }
 </style>
